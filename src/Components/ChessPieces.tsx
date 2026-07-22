@@ -1,4 +1,4 @@
-import { pieces } from "../data/pieces";
+import { pieces } from "../useful/pieces";
 
 export const ChessPieces = () => {
   return (
@@ -14,10 +14,10 @@ export const ChessPieces = () => {
               {name}
             </p>
             <div className="flex overflow-hidden rounded-lg border border-slate-700">
-              <div className="flex-1 h-14 bg-[#f0d9b5] text-4xl flex items-center justify-center text-slate-900 drop-shadow-sm">
+              <div className="flex-1 h-14 bg-light-tile text-4xl flex items-center justify-center text-slate-900 drop-shadow-sm">
                 {white}
               </div>
-              <div className="flex-1 h-14 bg-[#b58863] text-4xl flex items-center justify-center text-slate-950 drop-shadow-sm">
+              <div className="flex-1 h-14 bg-dark-tile text-4xl flex items-center justify-center text-slate-950 drop-shadow-sm">
                 {black}
               </div>
             </div>
