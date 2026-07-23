@@ -1,5 +1,10 @@
 import type { Piece } from "./pieces";
 
+export type Coord = {
+  row: number;
+  col: number;
+};
+
 export type BoardState = (Piece | null)[][];
 
 export const initialBoardState: BoardState = [

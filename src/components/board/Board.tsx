@@ -1,9 +1,11 @@
-import type { BoardState } from "../../useful/boardState";
+import type { BoardState, Coord } from "../../useful/boardState";
 import { BoardNumbers } from "./BoardNumbers";
 import { BoardSquare } from "./BoardSquare";
 
 type BoardProps = {
   boardState: BoardState;
+  selected: Coord | null;
+  onSquareClick: (row: number, col: number) => void;
 };
 
 const BoardRank = ({ rowIndex }: { rowIndex: number }) => (
@@ -12,7 +14,7 @@ const BoardRank = ({ rowIndex }: { rowIndex: number }) => (
   </div>
 );
 
-export const Board = ({ boardState }: BoardProps) => {
+export const Board = ({ boardState, selected, onSquareClick }: BoardProps) => {
   return (
     <div className="bg-slate-900 rounded-2xl shadow-lg border border-slate-800 text-center">
       <BoardNumbers />
@@ -26,6 +28,10 @@ export const Board = ({ boardState }: BoardProps) => {
                 ((rowIndex % 2) + columnIndex) % 2 === 0 ? "white" : "black"
               }
               piece={piece}
+              selected={
+                selected?.row === rowIndex && selected?.col === columnIndex
+              }
+              onClick={() => onSquareClick(rowIndex, columnIndex)}
             />
           ))}
           <BoardRank rowIndex={rowIndex} />
