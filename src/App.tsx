@@ -5,14 +5,17 @@ import {
   type BoardState,
   type Coord,
 } from "./useful/boardState";
+import { moves } from "./useful/moves";
 
 const App = () => {
   const [boardState, setBoardState] = useState<BoardState>(initialBoardState);
   const [selected, setSelected] = useState<Coord | null>(null);
+  const [possibleMoves, setPossibleMoves] = useState<Coord[] | null>([]);
 
   const handleSquareClick = (row: number, col: number) => {
     if (selected?.row === row && selected?.col === col) {
       setSelected(null);
+      setPossibleMoves(null);
       return;
     }
 
@@ -20,10 +23,12 @@ const App = () => {
 
     if (piece) {
       setSelected({ row, col });
+      setPossibleMoves(moves[piece.type](row, col, boardState));
       return;
     }
 
     setSelected(null);
+    setPossibleMoves(null);
   };
 
   return (
@@ -32,6 +37,7 @@ const App = () => {
         boardState={boardState}
         selected={selected}
         onSquareClick={handleSquareClick}
+        possibleMoves={possibleMoves}
       />
     </div>
   );

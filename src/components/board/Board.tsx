@@ -6,6 +6,7 @@ type BoardProps = {
   boardState: BoardState;
   selected: Coord | null;
   onSquareClick: (row: number, col: number) => void;
+  possibleMoves: Coord[] | null;
 };
 
 const BoardRank = ({ rowIndex }: { rowIndex: number }) => (
@@ -14,7 +15,12 @@ const BoardRank = ({ rowIndex }: { rowIndex: number }) => (
   </div>
 );
 
-export const Board = ({ boardState, selected, onSquareClick }: BoardProps) => {
+export const Board = ({
+  boardState,
+  selected,
+  onSquareClick,
+  possibleMoves,
+}: BoardProps) => {
   return (
     <div className="bg-slate-900 rounded-2xl shadow-lg border border-slate-800 text-center">
       <BoardNumbers />
@@ -24,6 +30,9 @@ export const Board = ({ boardState, selected, onSquareClick }: BoardProps) => {
           {row.map((piece, columnIndex) => (
             <BoardSquare
               key={columnIndex}
+              highlighted={possibleMoves?.some(
+                (coord) => coord.row === rowIndex && coord.col === columnIndex,
+              )}
               squareColor={
                 ((rowIndex % 2) + columnIndex) % 2 === 0 ? "white" : "black"
               }
