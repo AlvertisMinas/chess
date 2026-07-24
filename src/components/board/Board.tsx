@@ -27,22 +27,26 @@ export const Board = ({
       {boardState.map((row, rowIndex) => (
         <div key={rowIndex} className="flex items-center justify-center">
           <BoardRank rowIndex={rowIndex} />
-          {row.map((piece, columnIndex) => (
-            <BoardSquare
-              key={columnIndex}
-              highlighted={possibleMoves?.some(
-                (coord) => coord.row === rowIndex && coord.col === columnIndex,
-              )}
-              squareColor={
-                ((rowIndex % 2) + columnIndex) % 2 === 0 ? "white" : "black"
-              }
-              piece={piece}
-              selected={
-                selected?.row === rowIndex && selected?.col === columnIndex
-              }
-              onClick={() => onSquareClick(rowIndex, columnIndex)}
-            />
-          ))}
+          {row.map((piece, columnIndex) => {
+            const isPossibleMove = possibleMoves?.some(
+              (coord) => coord.row === rowIndex && coord.col === columnIndex,
+            );
+            return (
+              <BoardSquare
+                key={columnIndex}
+                highlighted={isPossibleMove}
+                capture={Boolean(isPossibleMove && piece)}
+                squareColor={
+                  ((rowIndex % 2) + columnIndex) % 2 === 0 ? "white" : "black"
+                }
+                piece={piece}
+                selected={
+                  selected?.row === rowIndex && selected?.col === columnIndex
+                }
+                onClick={() => onSquareClick(rowIndex, columnIndex)}
+              />
+            );
+          })}
           <BoardRank rowIndex={rowIndex} />
         </div>
       ))}

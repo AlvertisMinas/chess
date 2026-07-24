@@ -2,6 +2,7 @@ import { pieces, type Piece, type PieceColor } from "../../useful/pieces";
 
 type BoardSquareProps = {
   highlighted?: boolean;
+  capture?: boolean;
   squareColor: PieceColor;
   piece: Piece | null;
   selected: boolean;
@@ -10,6 +11,7 @@ type BoardSquareProps = {
 
 export const BoardSquare = ({
   highlighted,
+  capture,
   squareColor,
   piece,
   selected,
@@ -19,11 +21,13 @@ export const BoardSquare = ({
   const isClickable = piece !== null || highlighted;
   const background = selected
     ? "bg-amber-300"
-    : highlighted
-      ? "bg-amber-200"
-      : isLight
-        ? "bg-light-tile"
-        : "bg-dark-tile";
+    : capture
+      ? "bg-rose-400"
+      : highlighted
+        ? "bg-amber-200"
+        : isLight
+          ? "bg-light-tile"
+          : "bg-dark-tile";
   const hover =
     isClickable && !selected ? "hover:border-4 hover:border-slate-500" : "";
   const pointer = isClickable ? "cursor-pointer" : "cursor-default";
