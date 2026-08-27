@@ -6,11 +6,13 @@ import {
   type Coord,
 } from "./useful/boardState";
 import { moves } from "./useful/moves";
+import type { PieceColor } from "./useful/pieces";
 
 const App = () => {
   const [boardState, setBoardState] = useState<BoardState>(initialBoardState);
   const [selected, setSelected] = useState<Coord | null>(null);
   const [possibleMoves, setPossibleMoves] = useState<Coord[] | null>([]);
+  const [turn, setTurn] = useState<PieceColor>("white");
 
   const handleSquareClick = (row: number, col: number) => {
     // If the square is the already selected piece, deselect it
@@ -33,13 +35,13 @@ const App = () => {
     // if there is no selected piece, select the piece and show possible moves
     const piece = boardState[row][col];
 
-    if (piece) {
+    if (piece && piece.color === turn) {
       setSelected({ row, col });
       setPossibleMoves(moves[piece.type](row, col, boardState));
       return;
     }
 
-    // if the square is empty, deselect the piece
+    // if the square is empty, or holds the opponent's piece, deselect
     setSelected(null);
     setPossibleMoves(null);
   };
@@ -49,6 +51,7 @@ const App = () => {
       setBoardState(movePiece(boardState, selected, destination));
       setSelected(null);
       setPossibleMoves(null);
+      setTurn(turn === "white" ? "black" : "white");
     }
   };
 
@@ -65,7 +68,10 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center gap-4 p-6">
+      <div className="text-slate-300 text-lg">
+        {turn === "white" ? "White" : "Black"} to move
+      </div>
       <Board
         boardState={boardState}
         selected={selected}
