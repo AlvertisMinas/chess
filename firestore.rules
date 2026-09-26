@@ -1,0 +1,74 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /rooms/{roomId} {
+
+      // The only identities allowed to create/manage rooms. Add a second
+      // admin later by appending their UID here (and nowhere else).
+      function isAdmin() {
+        return request.auth != null
+          && request.auth.uid in ["PpyBlgVg3iV3005SKRIn5Bacare2"];
+      }
+
+      // Anyone signed in (including anonymous guests) can fetch ONE room
+      // if they know its ID (invite link, live game view) — but only an
+      // admin can list all rooms, so IDs and PINs can't be harvested.
+      allow get: if request.auth != null;
+      allow list: if isAdmin();
+
+      // Only an admin may create a room, taking either seat and leaving the
+      // other empty, with the shape the app expects.
+      allow create: if isAdmin()
+        && request.resource.data.turn == "white"
+        && request.resource.data.board is list
+        && request.resource.data.board.size() == 64
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.pin is string
+        && request.resource.data.pin.size() > 0
+        && (
+          (request.resource.data.players.white.uid == request.auth.uid && request.resource.data.players.black == null) ||
+          (request.resource.data.players.black.uid == request.auth.uid && request.resource.data.players.white == null)
+        );
+
+      // A guest claims whichever seat is still empty: only while it's
+      // empty, only assigning their own uid, and nothing else changes.
+      allow update: if request.auth != null
+        && (
+          (
+            resource.data.players.white == null
+            && request.resource.data.players.white.uid == request.auth.uid
+            && request.resource.data.players.black == resource.data.players.black
+          ) ||
+          (
+            resource.data.players.black == null
+            && request.resource.data.players.black.uid == request.auth.uid
+            && request.resource.data.players.white == resource.data.players.white
+          )
+        )
+        && request.resource.data.board == resource.data.board
+        && request.resource.data.turn == resource.data.turn
+        && request.resource.data.name == resource.data.name
+        && request.resource.data.pin == resource.data.pin;
+
+      // Submitting a move: only the player whose turn it currently is, only
+      // once both seats are filled, and only board/turn may change.
+      allow update: if request.auth != null
+        && resource.data.players.white != null
+        && resource.data.players.black != null
+        && (
+          (resource.data.turn == "white" && resource.data.players.white.uid == request.auth.uid) ||
+          (resource.data.turn == "black" && resource.data.players.black.uid == request.auth.uid)
+        )
+        && request.resource.data.turn != resource.data.turn
+        && request.resource.data.board != resource.data.board
+        && request.resource.data.name == resource.data.name
+        && request.resource.data.pin == resource.data.pin
+        && request.resource.data.players == resource.data.players;
+
+      allow delete: if false;
+    }
+  }
+}

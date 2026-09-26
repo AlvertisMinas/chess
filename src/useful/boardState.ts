@@ -7,6 +7,17 @@ export type Coord = {
 
 export type BoardState = (Piece | null)[][];
 
+export const flattenBoard = (boardState: BoardState): (Piece | null)[] =>
+  boardState.flat();
+
+export const unflattenBoard = (flatBoard: (Piece | null)[]): BoardState => {
+  const board: BoardState = [];
+  for (let row = 0; row < 8; row++) {
+    board.push(flatBoard.slice(row * 8, row * 8 + 8));
+  }
+  return board;
+};
+
 export const initialBoardState: BoardState = [
   [
     { color: "black", type: "rook" },
