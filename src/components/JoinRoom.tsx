@@ -4,7 +4,7 @@ import { getRoomSummary, joinRoom, type RoomSummary } from "../useful/rooms";
 type JoinRoomProps = {
   uid: string;
   roomId: string;
-  onJoined: (roomId: string) => void;
+  onJoined: () => void;
 };
 
 export const JoinRoom = ({ uid, roomId, onJoined }: JoinRoomProps) => {
@@ -23,7 +23,7 @@ export const JoinRoom = ({ uid, roomId, onJoined }: JoinRoomProps) => {
         setNotFound(true);
       } else if (result.isMember) {
         // Already seated here (e.g. a page refresh) — skip the form.
-        onJoined(roomId);
+        onJoined();
       } else {
         setSummary(result);
       }
@@ -42,7 +42,7 @@ export const JoinRoom = ({ uid, roomId, onJoined }: JoinRoomProps) => {
     setBusy(true);
     try {
       await joinRoom(roomId, uid, name.trim(), pin.trim());
-      onJoined(roomId);
+      onJoined();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not join room");
     } finally {
@@ -80,6 +80,7 @@ export const JoinRoom = ({ uid, roomId, onJoined }: JoinRoomProps) => {
               placeholder="Your name"
               value={name}
               onChange={(event) => setName(event.target.value)}
+              onKeyDown={(event) => event.key === "Enter" && handleJoin()}
               maxLength={20}
             />
 
@@ -90,6 +91,7 @@ export const JoinRoom = ({ uid, roomId, onJoined }: JoinRoomProps) => {
               onChange={(event) =>
                 setPin(event.target.value.replace(/\D/g, ""))
               }
+              onKeyDown={(event) => event.key === "Enter" && handleJoin()}
               maxLength={6}
               inputMode="numeric"
             />

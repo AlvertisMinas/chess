@@ -105,9 +105,8 @@ export const Game = ({ uid, roomId, onLeave }: GameProps) => {
     selected: Coord,
     destination: Coord,
   ) => {
-    const newBoardState = [...boardState];
-    newBoardState[destination.row][destination.col] =
-      boardState[selected.row][selected.col];
+    const newBoardState = boardState.map((row) => [...row]);
+    newBoardState[destination.row][destination.col] = boardState[selected.row][selected.col];
     newBoardState[selected.row][selected.col] = null;
     return newBoardState;
   };
