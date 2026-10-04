@@ -106,7 +106,8 @@ export const Game = ({ uid, roomId, onLeave }: GameProps) => {
     destination: Coord,
   ) => {
     const newBoardState = boardState.map((row) => [...row]);
-    newBoardState[destination.row][destination.col] = boardState[selected.row][selected.col];
+    newBoardState[destination.row][destination.col] =
+      boardState[selected.row][selected.col];
     newBoardState[selected.row][selected.col] = null;
     return newBoardState;
   };
@@ -152,6 +153,7 @@ export const Game = ({ uid, roomId, onLeave }: GameProps) => {
       </div>
       <Board
         boardState={boardState}
+        orientation={myColor ?? "white"}
         selected={selected}
         onSquareClick={handleSquareClick}
         possibleMoves={possibleMoves}
