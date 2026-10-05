@@ -68,7 +68,7 @@ service cloud.firestore {
         && request.resource.data.pin == resource.data.pin
         && request.resource.data.players == resource.data.players;
 
-      allow delete: if false;
+      allow delete: if isAdmin();
     }
   }
 }

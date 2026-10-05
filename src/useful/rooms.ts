@@ -1,5 +1,6 @@
 import {
   collection,
+  deleteDoc,
   doc,
   getDoc,
   limit,
@@ -173,3 +174,6 @@ export const submitMove = (
     board: flattenBoard(boardState),
     turn,
   });
+
+export const deleteRoom = (roomId: string) =>
+  deleteDoc(doc(db, "rooms", roomId));

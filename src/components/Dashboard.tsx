@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { AdminRoom } from "../useful/rooms";
+import { deleteRoom, type AdminRoom } from "../useful/rooms";
 
 type DashboardProps = {
   rooms: AdminRoom[];
@@ -65,16 +65,24 @@ export const Dashboard = ({
             </div>
           )}
           {rooms.map((room) => (
-            <button
-              key={room.id}
-              className="bg-slate-800 hover:bg-slate-700 text-left rounded px-3 py-2 flex items-center justify-between gap-2"
-              onClick={() => onSelectRoom(room.id)}
-            >
-              <span className="text-slate-100 truncate">{room.name}</span>
-              <span className="text-slate-500 text-sm shrink-0">
-                PIN: {room.pin} · {room.playerCount}/2
-              </span>
-            </button>
+            <div key={room.id} className="flex items-stretch gap-2">
+              <button
+                className="flex-1 min-w-0 bg-slate-800 hover:bg-slate-700 text-left rounded px-3 py-2 flex items-center justify-between gap-2 cursor-pointer"
+                onClick={() => onSelectRoom(room.id)}
+              >
+                <span className="text-slate-100 truncate">{room.name}</span>
+                <span className="text-slate-500 text-sm shrink-0">
+                  PIN: {room.pin} · {room.playerCount}/2
+                </span>
+              </button>
+              <button
+                className="bg-slate-800 hover:bg-red-600 text-slate-400 hover:text-white rounded px-3 cursor-pointer"
+                onClick={() => deleteRoom(room.id)}
+                aria-label={`Delete ${room.name}`}
+              >
+                ✕
+              </button>
+            </div>
           ))}
         </div>
       </div>
